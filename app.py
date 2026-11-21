@@ -1,13 +1,11 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import joblib
 import os
+import joblib
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import streamlit as st
 
-# =========================================================
-# KONFIGURASI HALAMAN
-# =========================================================
+# setting halaman utama
 st.set_page_config(
     page_title="QC Injection Molding • Assya & Ilma Edition",
     page_icon="🐱",
@@ -15,9 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# =========================================================
-# CUSTOM CSS - TEMA TUMBLER MiAO (ASSYA & ILMA EDITION)
-# =========================================================
+# css + responsif HP
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@500;600;700;800&display=swap');
@@ -31,7 +27,6 @@ h1, h2, h3, .miao-font {
     letter-spacing: 0.3px;
 }
 
-/* BACKGROUND UTAMA: Buttercream Yellow + taburan bintang */
 .stApp,
 [data-testid="stAppViewContainer"] {
     background-color: #FAF0BE !important;
@@ -51,7 +46,6 @@ h1, h2, h3, .miao-font {
     background: transparent !important;
 }
 
-/* Warna teks default */
 [data-testid="stMainBlockContainer"] h1,
 [data-testid="stMainBlockContainer"] h2,
 [data-testid="stMainBlockContainer"] h3,
@@ -75,9 +69,7 @@ code {
     backdrop-filter: blur(8px);
 }
 
-/* =====================================================
-   SIDEBAR: GRADASI PEACH - CREAM - PASTEL BLUE
-   ===================================================== */
+/* styling sidebar */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #FDE6DC 0%, #FAF0BE 52%, #DCE9F5 100%) !important;
     border-right: 3px solid #231F20;
@@ -87,7 +79,6 @@ code {
     padding-top: 1.2rem;
 }
 
-/* Kartu Header Sidebar ala Tutup Tumbler Coral + Peach */
 div.sidebar-header-card {
     background: linear-gradient(135deg, #E86F72 0%, #F08A8C 100%);
     border: 2.5px solid #231F20;
@@ -138,7 +129,6 @@ div.sidebar-header-card p {
     line-height: 1.35;
 }
 
-/* Kartu Stiker untuk Dropdown Selectbox di Sidebar */
 [data-testid="stSidebar"] [data-testid="stSelectbox"] {
     background: #FFFDF7;
     border: 2px solid #231F20;
@@ -174,7 +164,6 @@ div.sidebar-header-card p {
     fill: #231F20 !important;
 }
 
-/* Kartu Stiker untuk Setiap Slider Sidebar */
 [data-testid="stSidebar"] [data-testid="stSlider"] {
     background: #FFFDF7;
     border: 2px solid #231F20;
@@ -226,9 +215,7 @@ div.sidebar-header-card p {
     box-shadow: 0 2px 0 #231F20 !important;
 }
 
-/* =====================================================
-   KONTAINER UTAMA & HERO BANNER
-   ===================================================== */
+/* kontainer utama & banner */
 .main .block-container {
     max-width: 1400px;
     padding-top: 1.8rem;
@@ -272,7 +259,6 @@ div.miao-hero {
     box-shadow: 2px 2px 0px #231F20;
 }
 
-/* Judul Utama ala Tipografi Stiker (Putih Krem + Outline Tegas) */
 .hero-title {
     font-family: 'Fredoka', sans-serif !important;
     font-size: 2.15rem !important;
@@ -316,7 +302,6 @@ div.miao-hero {
     box-shadow: 2px 2px 0px #231F20;
 }
 
-/* Wadah Stiker Karakter Assya & Ilma */
 .mascot-group {
     display: flex;
     align-items: center;
@@ -360,7 +345,6 @@ div.miao-hero {
     letter-spacing: 0.4px;
 }
 
-/* KARTU METRIK GAYA STIKER RETRO */
 .sticker-card {
     background: #FFF9DF;
     border: 2.5px solid #231F20;
@@ -389,7 +373,6 @@ div.miao-hero {
     color: #231F20 !important;
 }
 
-/* KOTAK STATUS EVALUASI MUTU */
 .miao-status-ok {
     background: #E6F8EC;
     border: 2.5px solid #231F20;
@@ -416,7 +399,6 @@ div.miao-hero {
     margin-bottom: 12px;
 }
 
-/* KARTU PROBABILITAS & THRESHOLD */
 .prob-card {
     background: #FFFDF7;
     border: 2px solid #231F20;
@@ -446,33 +428,42 @@ div.miao-hero {
     line-height: 1.15;
 }
 
-/* TABEL RINGKASAN RETRO */
-.miao-table {
+/* pembungkus tabel supaya bisa digeser ke samping saat dibuka di HP */
+.table-wrap {
     width: 100%;
-    border-collapse: collapse;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     background: #FFFDF7;
     border: 2.5px solid #231F20;
     border-radius: 16px;
-    overflow: hidden;
     margin-top: 8px;
-    font-size: 0.85rem;
     box-shadow: 4px 4px 0px #F7D44C;
+}
+
+.miao-table {
+    width: 100%;
+    min-width: 460px;
+    border-collapse: collapse;
+    background: #FFFDF7;
+    font-size: 0.85rem;
 }
 
 .miao-table th {
     background: #FCD5C8;
     color: #231F20 !important;
-    padding: 9px 6px;
+    padding: 9px 8px;
     text-align: center;
     font-weight: 800;
     border-bottom: 2px solid #231F20;
+    white-space: nowrap;
 }
 
 .miao-table td {
     color: #231F20 !important;
-    padding: 9px 6px;
+    padding: 9px 8px;
     text-align: center;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 hr {
@@ -480,12 +471,88 @@ hr {
     border-top: 2px dashed #E86F72 !important;
     margin: 1.4rem 0 !important;
 }
+
+/* penyesuaian tampilan otomatis saat dibuka di layar HP */
+@media (max-width: 768px) {
+    .main .block-container {
+        padding-top: 1rem !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    [data-testid="stMainBlockContainer"] {
+        border-radius: 20px;
+        box-shadow: 4px 4px 0px #9BB6CC;
+    }
+
+    div.miao-hero {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 18px 16px;
+        gap: 14px;
+        border-radius: 20px;
+        box-shadow: 4px 4px 0px #231F20;
+    }
+
+    .hero-title {
+        font-size: 1.55rem !important;
+        -webkit-text-stroke: 1px #231F20;
+        text-shadow: 2px 2px 0px #231F20;
+    }
+
+    .hero-subtitle {
+        font-size: 0.86rem !important;
+        margin-bottom: 10px !important;
+    }
+
+    .hero-pills {
+        gap: 6px;
+    }
+
+    .hero-pill {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+    }
+
+    .mascot-group {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 12px;
+        gap: 12px;
+        box-sizing: border-box;
+    }
+
+    .mascot-card {
+        flex: 1;
+        max-width: 130px;
+        padding: 6px 10px 8px 10px;
+    }
+
+    .sticker-card {
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: 16px;
+    }
+
+    .sticker-value {
+        font-size: 1.45rem;
+    }
+
+    .prob-number {
+        font-size: 1.45rem;
+    }
+
+    .miao-table th,
+    .miao-table td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# HERO BANNER DENGAN STIKER "ASSYA" & "ILMA"
-# =========================================================
+# banner atas + stiker Assya & Ilma
 st.markdown("""
 <div class="miao-hero">
 <div>
@@ -546,9 +613,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# SIDEBAR - HEADER CARD, DROPDOWN & SLIDER PARAMETER MESIN
-# =========================================================
+# input parameter dari sidebar
 st.sidebar.markdown("""
 <div class="sidebar-header-card">
 <div class="sidebar-clasp">🐾 Control Panel</div>
@@ -568,83 +633,79 @@ holding_pressure = st.sidebar.slider("🛡️ Holding Pressure (bar)", 300.0, 14
 cooling_time = st.sidebar.slider("🧊 Cooling Time (detik)", 5.0, 45.0, 18.0, 0.5)
 cycle_time = st.sidebar.slider("⏱️ Cycle Time (detik)", 15.0, 90.0, 35.0, 0.5)
 
-input_df = pd.DataFrame({
-    "Mesin": [mesin],
-    "Shift": [shift],
-    "Jenis_Bahan": [jenis_bahan],
-    "Melt_Temp": [melt_temp],
-    "Mold_Temp": [mold_temp],
-    "Injection_Pressure": [injection_pressure],
-    "Holding_Pressure": [holding_pressure],
-    "Cooling_Time": [cooling_time],
-    "Cycle_Time": [cycle_time]
-})
+data_input = pd.DataFrame([{
+    "Mesin": mesin,
+    "Shift": shift,
+    "Jenis_Bahan": jenis_bahan,
+    "Melt_Temp": melt_temp,
+    "Mold_Temp": mold_temp,
+    "Injection_Pressure": injection_pressure,
+    "Holding_Pressure": holding_pressure,
+    "Cooling_Time": cooling_time,
+    "Cycle_Time": cycle_time
+}])
 
-# =========================================================
-# LOAD MODEL ML & PERHITUNGAN PROBABILITAS CACAT
-# =========================================================
-MODEL_PATH = "model_qc_injection.joblib"
-THRESHOLD_BISNIS = 25.0
+# load model dan setting batas threshold 25%
+file_model = "model_qc_injection.joblib"
+batas_threshold = 25.0
 
 @st.cache_resource
-def load_model(path):
-    if os.path.exists(path):
-        return joblib.load(path)
+def ambil_model(nama_file):
+    if os.path.exists(nama_file):
+        return joblib.load(nama_file)
     return None
 
-def hitung_simulasi_probabilitas(m_temp, mo_temp, inj_p, hold_p, cool_t, cyc_t, msn, shf, bhn):
-    prob = 5.0
-    if m_temp < 200.0 or m_temp > 255.0:
-        prob += abs(m_temp - 230.0) * 0.75
-    if mo_temp < 30.0 or mo_temp > 80.0:
-        prob += abs(mo_temp - 55.0) * 0.5
-    if inj_p < 750.0 or inj_p > 1620.0:
-        prob += abs(inj_p - 1200.0) * 0.045
-    if hold_p < 450.0 or hold_p > 1150.0:
-        prob += abs(hold_p - 800.0) * 0.03
-    if cool_t < 10.0:
-        prob += (10.0 - cool_t) * 4.5
-    if cyc_t < 20.0 or cyc_t > 70.0:
-        prob += abs(cyc_t - 40.0) * 0.45
-    if shf == "malam":
-        prob += 2.5
-    if bhn in ["PC", "ABS"]:
-        prob += 1.5
-    if msn == "IM-03":
-        prob += 1.0
-    return float(np.clip(prob, 1.0, 98.5))
+def hitung_risiko(suhu_leleh, suhu_cetakan, tek_injeksi, tek_tahan, waktu_dingin, waktu_siklus, no_mesin, jadwal_shift, bahan):
+    risiko = 5.0
+    if suhu_leleh < 200 or suhu_leleh > 255:
+        risiko += abs(suhu_leleh - 230) * 0.75
+    if suhu_cetakan < 30 or suhu_cetakan > 80:
+        risiko += abs(suhu_cetakan - 55) * 0.5
+    if tek_injeksi < 750 or tek_injeksi > 1620:
+        risiko += abs(tek_injeksi - 1200) * 0.045
+    if tek_tahan < 450 or tek_tahan > 1150:
+        risiko += abs(tek_tahan - 800) * 0.03
+    if waktu_dingin < 10:
+        risiko += (10 - waktu_dingin) * 4.5
+    if waktu_siklus < 20 or waktu_siklus > 70:
+        risiko += abs(waktu_siklus - 40) * 0.45
+    if jadwal_shift == "malam":
+        risiko += 2.5
+    if bahan in ["PC", "ABS"]:
+        risiko += 1.5
+    if no_mesin == "IM-03":
+        risiko += 1.0
+    return float(np.clip(risiko, 1.0, 98.5))
 
-model = load_model(MODEL_PATH)
+model = ambil_model(file_model)
 
 if model is not None:
     try:
-        if hasattr(model, "feature_names_in_"):
-            model_input = input_df.reindex(columns=model.feature_names_in_, fill_value=0)
-        else:
-            model_input = input_df
+        kolom_model = getattr(model, "feature_names_in_", data_input.columns)
+        fitur_uji = data_input.reindex(columns=kolom_model, fill_value=0)
         if hasattr(model, "predict_proba"):
-            proba = model.predict_proba(model_input)[0]
-            probabilitas_cacat = float(proba[1]) * 100.0 if len(proba) > 1 else float(proba[0]) * 100.0
+            peluang = model.predict_proba(fitur_uji)[0]
+            prob_cacat = float(peluang[-1]) * 100
         else:
-            pred = model.predict(model_input)[0]
-            probabilitas_cacat = 5.0 if (pred == 0 or str(pred).upper() in ["OK", "NORMAL", "PASS", "GOOD"]) else 68.0
+            hasil_pred = model.predict(fitur_uji)[0]
+            prob_cacat = 5.0 if str(hasil_pred).upper() in ["0", "OK", "NORMAL", "PASS", "GOOD"] else 68.0
     except Exception:
-        probabilitas_cacat = hitung_simulasi_probabilitas(
-            melt_temp, mold_temp, injection_pressure, holding_pressure, cooling_time, cycle_time, mesin, shift, jenis_bahan
+        prob_cacat = hitung_risiko(
+            melt_temp, mold_temp, injection_pressure, holding_pressure,
+            cooling_time, cycle_time, mesin, shift, jenis_bahan
         )
 else:
-    probabilitas_cacat = hitung_simulasi_probabilitas(
-        melt_temp, mold_temp, injection_pressure, holding_pressure, cooling_time, cycle_time, mesin, shift, jenis_bahan
+    prob_cacat = hitung_risiko(
+        melt_temp, mold_temp, injection_pressure, holding_pressure,
+        cooling_time, cycle_time, mesin, shift, jenis_bahan
     )
 
-is_lolos_qc = probabilitas_cacat <= THRESHOLD_BISNIS
+status_lolos = prob_cacat <= batas_threshold
 
-# =========================================================
-# 4 KARTU METRIK UTAMA
-# =========================================================
-c1, c2, c3, c4 = st.columns(4)
+# 4 kartu metrik utama
+col1, col2, col3, col4 = st.columns(4)
 
-with c1:
+with col1:
     st.markdown(f"""
 <div class="sticker-card">
 <div class="sticker-label">★ Melt Temp</div>
@@ -652,7 +713,7 @@ with c1:
 </div>
 """, unsafe_allow_html=True)
 
-with c2:
+with col2:
     st.markdown(f"""
 <div class="sticker-card">
 <div class="sticker-label">★ Mold Temp</div>
@@ -660,7 +721,7 @@ with c2:
 </div>
 """, unsafe_allow_html=True)
 
-with c3:
+with col3:
     st.markdown(f"""
 <div class="sticker-card">
 <div class="sticker-label">★ Injection Pressure</div>
@@ -668,7 +729,7 @@ with c3:
 </div>
 """, unsafe_allow_html=True)
 
-with c4:
+with col4:
     st.markdown(f"""
 <div class="sticker-card">
 <div class="sticker-label">★ Cycle Time</div>
@@ -678,18 +739,16 @@ with c4:
 
 st.markdown("---")
 
-# =========================================================
-# HASIL ANALISIS & PREDIKSI MODEL + VISUALISASI GRAFIK
-# =========================================================
-left_col, right_col = st.columns([1.15, 1.2], gap="large")
+# kolom hasil prediksi & grafik parameter
+kol_kiri, kol_kanan = st.columns([1.15, 1.2], gap="large")
 
-with left_col:
+with kol_kiri:
     st.subheader("📋 Hasil Analisis & Prediksi Model")
 
-    status_col, metric_col = st.columns([1.45, 1.0], gap="medium")
+    kol_status, kol_angka = st.columns([1.45, 1.0], gap="medium")
 
-    with status_col:
-        if is_lolos_qc:
+    with kol_status:
+        if status_lolos:
             st.markdown("""
 <div class="miao-status-ok">
 <div style="font-size:1.02rem; font-weight:800; color:#1B6B42;">✅ STATUS: KOMPONEN NORMAL (LOLOS QC)</div>
@@ -704,20 +763,20 @@ with left_col:
 <div class="status-caption">Parameter melebihi batas aman, periksa setting mesin.</div>
 """, unsafe_allow_html=True)
 
-    with metric_col:
+    with kol_angka:
         st.markdown(f"""
 <div class="prob-card">
 <div class="prob-title">Probabilitas Cacat</div>
-<div class="prob-number">{probabilitas_cacat:.2f}%</div>
+<div class="prob-number">{prob_cacat:.2f}%</div>
 </div>
 <div class="prob-card threshold">
 <div class="prob-title">Batas Threshold Bisnis</div>
-<div class="prob-number">{THRESHOLD_BISNIS:.1f}%</div>
+<div class="prob-number">{batas_threshold:.1f}%</div>
 </div>
 """, unsafe_allow_html=True)
 
-    # Tabel Ringkasan Parameter Aktif
     st.markdown(f"""
+<div class="table-wrap">
 <table class="miao-table">
 <thead>
 <tr>
@@ -744,53 +803,46 @@ with left_col:
 </tr>
 </tbody>
 </table>
+</div>
 """, unsafe_allow_html=True)
 
-with right_col:
+with kol_kanan:
     st.subheader("📊 Profil Parameter Saat Ini")
 
     fig, ax = plt.subplots(figsize=(7.2, 4.15))
     fig.patch.set_alpha(0.0)
     ax.set_facecolor("#FFF9DF")
 
-    normalized_vals = [
-        (melt_temp - 180) / (280 - 180) * 100,
-        (mold_temp - 20) / (90 - 20) * 100,
-        (injection_pressure - 500) / (1800 - 500) * 100,
-        (holding_pressure - 300) / (1400 - 300) * 100,
-        (cooling_time - 5) / (45 - 5) * 100,
-        (cycle_time - 15) / (90 - 15) * 100,
+    rentang_param = [
+        (melt_temp, 180, 280),
+        (mold_temp, 20, 90),
+        (injection_pressure, 500, 1800),
+        (holding_pressure, 300, 1400),
+        (cooling_time, 5, 45),
+        (cycle_time, 15, 90),
     ]
-    labels = ["Melt Temp", "Mold Temp", "Inj. Press", "Hold Press", "Cooling", "Cycle"]
-    tumbler_palette = ["#E86F72", "#9BB6CC", "#231F20", "#F7D44C", "#F5A99B", "#D95B60"]
+    persen = [(val - mn) / (mx - mn) * 100 for val, mn, mx in rentang_param]
+    label_param = ["Melt Temp", "Mold Temp", "Inj. Press", "Hold Press", "Cooling", "Cycle"]
+    warna_batang = ["#E86F72", "#9BB6CC", "#231F20", "#F7D44C", "#F5A99B", "#D95B60"]
 
-    bars = ax.barh(labels, normalized_vals, color=tumbler_palette, height=0.58, edgecolor="#231F20", linewidth=1.6)
+    bars = ax.barh(label_param, persen, color=warna_batang, height=0.58, edgecolor="#231F20", linewidth=1.6)
+    ax.bar_label(bars, fmt="%.1f%%", padding=5, color="#231F20", fontsize=9.5, fontweight="bold")
+
     ax.invert_yaxis()
     ax.set_xlim(0, 115)
     ax.grid(axis="x", linestyle="--", alpha=0.35, color="#E86F72")
     ax.set_axisbelow(True)
 
-    for bar, val in zip(bars, normalized_vals):
-        ax.text(
-            val + 2.2,
-            bar.get_y() + bar.get_height() / 2,
-            f"{val:.1f}%",
-            va="center",
-            ha="left",
-            color="#231F20",
-            fontsize=9.5,
-            fontweight="bold"
-        )
-
     ax.set_xlabel("Persentase terhadap Rentang Operasi (%)", color="#231F20", fontsize=9.5, fontweight="bold")
     ax.set_title(f"Distribusi Parameter • {mesin} ({shift.capitalize()} - {jenis_bahan}) ★", color="#231F20", fontsize=11.5, fontweight="bold", pad=12)
     ax.tick_params(colors="#231F20", labelsize=9.5)
 
-    for spine in ["top", "right"]:
-        ax.spines[spine].set_visible(False)
-    for spine in ["bottom", "left"]:
-        ax.spines[spine].set_color("#231F20")
-        ax.spines[spine].set_linewidth(1.5)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["bottom"].set_color("#231F20")
+    ax.spines["bottom"].set_linewidth(1.5)
+    ax.spines["left"].set_color("#231F20")
+    ax.spines["left"].set_linewidth(1.5)
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
